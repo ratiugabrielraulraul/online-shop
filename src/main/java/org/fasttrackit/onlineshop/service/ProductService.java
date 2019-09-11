@@ -39,4 +39,12 @@ public class ProductService {
 
 
     }
+
+    public Product getProduct(long id) {
+        LOGGER.info("Retrieving product {}", id);
+        //lambda expressions
+       return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product" + id + "not found."));
+
+
+    }
 }
