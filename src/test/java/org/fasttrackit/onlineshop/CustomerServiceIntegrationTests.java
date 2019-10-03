@@ -23,17 +23,7 @@ public class CustomerServiceIntegrationTests {
 
     @Test
     public void testCreateCustomer_whenValidRequest_thenReturnCustomer() {
-        SaveCustomerRequest request = new SaveCustomerRequest();
-        request.setFirstName("CustomerFirstName");
-        request.setLastName("CustomerLastName");
 
-        Customer customer = customerService.createCustomer(request);
-
-        assertThat(customer, notNullValue());
-        assertThat(customer.getId(),notNullValue());
-        assertThat(customer.getId(),greaterThan(0L));
-        assertThat(customer.getFirstName(),is(request.getFirstName()));
-        assertThat(customer.getLastName(),is(request.getLastName()));
 
 
     }

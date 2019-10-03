@@ -3,7 +3,11 @@ package org.fasttrackit.onlineshop.domain;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 // prima data punem atnotarea @Entity
 
 @Entity
@@ -19,17 +23,9 @@ public class Product {
     private String description;
     private String imagePath;
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", quantity=" + quantity +
-                ", price=" + price +
-                ", description='" + description + '\'' +
-                ", imagePath='" + imagePath + '\'' +
-                '}';
-    }
+    @ManyToMany(mappedBy = "products")
+    private Set<Cart> carts = new HashSet<>();
+
 
     public long getId() {
         return id;
@@ -77,5 +73,38 @@ public class Product {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public Set<Cart> getCarts() {
+        return carts;
+    }
+
+    public void setCarts(Set<Cart> carts) {
+        this.carts = carts;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                ", imagePath='" + imagePath + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return id == product.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

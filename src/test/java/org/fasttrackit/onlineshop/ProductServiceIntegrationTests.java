@@ -4,6 +4,7 @@ package org.fasttrackit.onlineshop;
 import org.fasttrackit.onlineshop.domain.Product;
 import org.fasttrackit.onlineshop.expection.ResourceNotFoundException;
 import org.fasttrackit.onlineshop.service.ProductService;
+import org.fasttrackit.onlineshop.steps.ProductSteps;
 import org.fasttrackit.onlineshop.transfer.product.SaveProductRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,10 +23,13 @@ import static org.hamcrest.Matchers.greaterThan;
 public class ProductServiceIntegrationTests {
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ProductSteps productSteps;
 
     @Test
     public void testCreateProduct_whenValidRequest_thenReturnCreatedProduct() {
-            createProduct();
+
+           productSteps.createProduct();
 
     }
 
@@ -42,7 +46,7 @@ public class ProductServiceIntegrationTests {
     }
     @Test
     public void testGetProduct_whenExistingEntity_thenReturnProduct() {
-        Product createdProduct = createProduct();
+        Product createdProduct = productSteps.createProduct();
 
         Product retrievedProduct = productService.getProduct(createdProduct.getId());
 
@@ -59,7 +63,7 @@ public class ProductServiceIntegrationTests {
     }
     @Test
     public void testUpdateProduct_whenValidRequest_thenReturnUpdatedProduct() {
-        Product createdProduct = createProduct();
+        Product createdProduct = productSteps.createProduct();
         SaveProductRequest request = new SaveProductRequest();
         request.setName(createdProduct.getName()+ "Updated");
         request.setPrice(createdProduct.getPrice()+ 10);
@@ -68,34 +72,18 @@ public class ProductServiceIntegrationTests {
         Product updatedProduct = productService.updateProduct(createdProduct.getId(), request);
 
         assertThat(updatedProduct, notNullValue());
-        assertThat(updatedProduct.getId(),is(updatedProduct));
-        assertThat(updatedProduct.getName(),is(updatedProduct));
-        assertThat(updatedProduct.getPrice(),is (updatedProduct));
-        assertThat(updatedProduct.getQuantity(),is (updatedProduct));
-        assertThat(updatedProduct.getDescription(),is (updatedProduct));
+        assertThat(updatedProduct.getId(),is(createdProduct.getId()));
+        assertThat(updatedProduct.getName(),is(request.getName()));
+        assertThat(updatedProduct.getPrice(),is (request.getPrice()));
+        assertThat(updatedProduct.getQuantity(),is (request.getQuantity()));
+        assertThat(updatedProduct.getDescription(),is (request.getDescription()));
 
 
     }
 
 
-    private Product createProduct() {
-        SaveProductRequest request = new SaveProductRequest();
-        request.setName("Computer");
-        request.setDescription("Some description");
-        request.setPrice(2000);
-        request.setQuantity(100);
 
-        Product product = productService.createProduct(request);
 
-        assertThat(product, notNullValue());
-        assertThat(product.getId(),notNullValue());
-        assertThat(product.getId(),greaterThan((0L)));
-        assertThat(product.getName(), is(request.getName()));
-        assertThat(product.getDescription(), is(request.getDescription()));
-        assertThat(product.getQuantity(), is(request.getQuantity()));
-        assertThat(product.getPrice(), is(request.getPrice()));
-        return product;
-    }
 
 
 
